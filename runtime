@@ -1,0 +1,16 @@
+EBC : 
+encode 206
+decode 222
+
+CBC : 
+encode 222
+decode 222 
+
+OFB : 
+encode 208 
+decode 213 
+
+CTR : 
+encode 220
+decode 219 
+
