@@ -1,3 +1,9 @@
+各種模式的執行時間：
+測試環境：
+    OS  : os x El Capitan
+    CPU : 2.7 GHz Intel Core i5  
+    RAM : 8 GB 1867 MHz DDR3   
+
 EBC : 
 encode 177.190707s
 decode 176.342598s
