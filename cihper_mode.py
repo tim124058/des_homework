@@ -5,10 +5,7 @@ import f_des
 
 
 def ECB(data,key,mode):
-    start_time = time()
-    print("running......")
     result=""
-
     keyarray = f_des.key_schedule(key)
     if mode == "1":
         for i in range(0,len(data),64):
@@ -17,18 +14,12 @@ def ECB(data,key,mode):
         for i in range(0,len(data),64):
             result+=f_des.de_DES(data[i:i+64],keyarray)
 
-    process_time = time()-start_time
-    print("\nrun time : %fs" % process_time)
-    print("success......\n")
     return result
 
 
 
 def CBC(data,key,mode,iv):
-    start_time = time()
-    print("running......")
     result=""
-
     keyarray = f_des.key_schedule(key)
     if mode == "1":
         for i in range(0,len(data),64):
@@ -41,26 +32,17 @@ def CBC(data,key,mode,iv):
             result += f_des.xor_func(tmp,iv)
             iv = data[i:i+64]
 
-    process_time = time()-start_time
-    print("\nrun time : %fs" % process_time)
-    print("success......\n")
     return result
 
 
 
 def OFB(data,key,mode,iv):
-    start_time = time()
-    print("running......")
     result=""
-
     keyarray = f_des.key_schedule(key)
     for i in range(0,len(data),64):
         iv = f_des.DES(iv,keyarray)
         result += f_des.xor_func(data[i:i+64],iv)
 
-    process_time = time()-start_time
-    print("\nrun time : %fs" % process_time)
-    print("success......\n")
     return result
 
 
@@ -71,28 +53,25 @@ def CTR(data,key,mode,iv):
             return "0"*64
         return bin(int(d,2)+1)[2:].zfill(64)
 
-    start_time = time()
-    print("running......")
     result=""
-
     keyarray = f_des.key_schedule(key)
     for i in range(0,len(data),64):
         iv = add_1(iv)
         tmp = f_des.DES(iv,keyarray)
         result += f_des.xor_func(data[i:i+64],tmp)
 
-    process_time = time()-start_time
-    print("\nrun time : %fs" % process_time)
-    print("success......\n")
     return result
 
 
 
 
-KEY = "1010111110101111101011111010111110101111101011111010111110101111"
-IV  = "1111101011111010111110101111101011111010111110101111101011111010"
-#KEY = input("please enter KEY : ")
-#IV = input("please enter IV : ")
+KEY = input("please enter KEY (you can enter 0 to get default value) : ")
+IV = input("please enter IV (you can enter 0 to get default value) : ")
+
+if KEY=="0":
+    KEY = "1010111110101111101011111010111110101111101011111010111110101111"
+if IV=="0":
+    IV  = "1111101011111010111110101111101011111010111110101111101011111010"
 
 
 imgname = input("please enter image name(ex:cat.bmp) : ")   
@@ -111,6 +90,8 @@ for i in range(height):
 option = input("\nplease select cipher operation\n1.ECB 2.CBC 3.OFB 4.CTR : ")
 m = input("1.encode 2.decode : ")
 
+start_time = time()
+print("running......")
 
 if option == "1":
     n_data = ECB(data,KEY,m)
@@ -120,6 +101,9 @@ elif option == "3":
     n_data = OFB(data,KEY,m,IV)
 elif option == "4":
     n_data = CTR(data,KEY,m,IV)
+
+print("\nrun time : %fs" % (time()-start_time))
+print("success......\n")
 #-----------------------------------
 
 

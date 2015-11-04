@@ -106,37 +106,31 @@ def xor_func(arrayA,arrayB):                # xor two equal length binary array 
         result+=str(int(arrayA[i])^int(arrayB[i]))
     return result
 
-def shift(array,mode,n):                    #shift right or left n bit
-    if mode=="r":
-        n=-n
+def shift(array,n):                    #shift left n bit
     return array[n:]+array[:n]
 
-def product(data,key,n,mode):               #product cipher
+def product(data,key,n):               #product cipher
     result=""
-    if mode==1:
-        for i in range(n):
-            result+=data[key[i]-1]
-    else:
-        for i in range(1,n+1):
-            result+=data[key.index(i)]
+    for i in range(n):
+        result+=data[key[i]-1]
     return result
 
 def key_schedule(key):                      #schedule 16 times key
     r_t=[1,1,2,2,2,2,2,2,1,2,2,2,2,2,2,1]
-    f_key = product(key,PC_1,56,1)
+    f_key = product(key,PC_1,56)
     result=[None for i in range(16)]
     L=f_key[:28]
     R=f_key[28:]
     for i in range(16):
-        L=shift(L,"l",r_t[i])
-        R=shift(R,"l",r_t[i])
-        result[i]=product(L+R,PC_2,48,1)
+        L=shift(L,r_t[i])
+        R=shift(R,r_t[i])
+        result[i]=product(L+R,PC_2,48)
 
     return result
 
 
 def F_func(data,k):                         #f-function
-    temp = product(data,expansion,48,1)
+    temp = product(data,expansion,48)
     temp = xor_func(temp,k)
     result="" 
     for i in range(8):
@@ -146,13 +140,13 @@ def F_func(data,k):                         #f-function
         t = S_BOX[i][row*16+column]
         result+=bin(t)[2:].zfill(4)
 
-    result = product(result,permutation,32,1)
+    result = product(result,permutation,32)
     return result
 
 
 #############################################################################
 def DES(data,keyarray):
-    result = product(data,IP,64,1)    #inital permutation
+    result = product(data,IP,64)    #inital permutation
     for i in range(16):
         L=result[:32]
         R=result[32:]
@@ -160,13 +154,13 @@ def DES(data,keyarray):
         result+=xor_func(L,F_func(R,keyarray[i]))
 
     result = result[32:] + result[:32]
-    result = product(result,FP,64,1)    #final permutation
+    result = product(result,FP,64)    #final permutation
 
     return result
 
 
 def de_DES(data,keyarray):
-    result = product(data,FP,64,2)
+    result = product(data,IP,64)
     result = result[32:] + result[:32]
     for i in range(16):
         L=result[:32]
@@ -174,7 +168,7 @@ def de_DES(data,keyarray):
         result=xor_func(R,F_func(L,keyarray[15-i]))
         result+=L
 
-    result = product(result,IP,64,2)
+    result = product(result,FP,64)
 
     return result
 #############################################################################
