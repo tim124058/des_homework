@@ -76,6 +76,7 @@ if IV=="0":
 
 imgname = input("please enter image name(ex:cat.bmp) : ")   
 im = Image.open(imgname)       
+im=im.convert("RGB")
 width,height = im.size                  #get image size
 pix = im.load()                         #pix[x,y]   [640,480]
 
